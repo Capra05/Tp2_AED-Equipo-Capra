@@ -1,4 +1,4 @@
-# es mayus y dig bien
+# es mayus y dig bien AAAAAAAAAAAAAAAAAAAAAAAA
 def es_mayuscula(c):
     return c in "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
 def es_digito(c):
