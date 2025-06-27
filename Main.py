@@ -1,7 +1,4 @@
 # es mayus y dig bien
-#dasd
-def tato():
-    return True
 def es_mayuscula(c):
     return c in "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
 def es_digito(c):
