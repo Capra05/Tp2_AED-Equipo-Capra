@@ -15,6 +15,7 @@ def Calculo_impuesto(codigo_orden_pago,identificador_calculo_comision,monto_nomi
     comision=0
     codigo_iso=""
     monto_fijo=0
+    bloques_miles = 0
     if identificador_calculo_comision==1:
         if "ARS" in codigo_orden_pago:
             codigo_iso = "ARS"
@@ -57,6 +58,14 @@ def Calculo_impuesto(codigo_orden_pago,identificador_calculo_comision,monto_nomi
         if comision>50000:
             comision=50000
         monto_base=monto_nominal-comision
+    elif identificador_calculo_comision==8:
+        if "GBP" in codigo_orden_pago:
+            codigo_iso = "GBP"
+        bloques_miles = monto_nominal//1000
+        if monto_nominal%1000 < 0:
+            bloques_miles +=1
+        comision = 20 + 3 * bloques_miles
+        monto_base = monto_nominal - comision
     return monto_base,comision,codigo_iso
 def moneda_invalida(cadena):
     mensaje_error="Moneda incorrecta"
@@ -66,7 +75,7 @@ def moneda_invalida(cadena):
 def invalida(cadena):
     mensaje_error = "Destinatario mal identificado"
     for c in cadena:
-        if not (c.isupper() or c.isdigit() or c == '-'):
+        if not (es_mayuscula(c) or es_digito(c) or c == '-'):
             return True, mensaje_error
 
     if all(c == '-' for c in cadena):
