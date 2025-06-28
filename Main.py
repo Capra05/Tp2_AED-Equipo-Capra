@@ -1,4 +1,3 @@
-# es mayus y dig bien AAAAAAAAAAAAAAAAAAAAAAAA
 def es_mayuscula(c):
     return c in "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
 def es_digito(c):
@@ -10,20 +9,29 @@ def cant_lineas():
 def iniciar():
     archivo = open("ordenes25.txt","rt")
     return archivo
-def Calculo_impuesto(codigo_orden_pago,identificador_calculo_comision,monto_nominal):
+def det_codigo_iso(codigo_orden_pago):
+    codigo_iso="no detectado"
+    if "ARS" in codigo_orden_pago:
+            codigo_iso = "ARS"
+    if "USD" in codigo_orden_pago:
+            codigo_iso = "ARS"
+    if "EUR" in codigo_orden_pago:
+            codigo_iso = "ARS"
+    if "GBP" in codigo_orden_pago:
+            codigo_iso = "ARS"
+    if "JPY" in codigo_orden_pago:
+            codigo_iso = "ARS"
+    return codigo_iso
+def Calculo_impuesto(codigo_iso,identificador_calculo_comision,monto_nominal):
     monto_base=0
     comision=0
     codigo_iso=""
     monto_fijo=0
     bloques_miles = 0
-    if identificador_calculo_comision==1:
-        if "ARS" in codigo_orden_pago:
-            codigo_iso = "ARS"
+    if identificador_calculo_comision==1 and codigo_iso=="ARS":
         comision=9*monto_nominal//100
         monto_base=monto_nominal-comision
-    elif identificador_calculo_comision==2:
-        if "USD" in codigo_orden_pago:
-            codigo_iso = "USD"
+    elif identificador_calculo_comision==2 and codigo_iso=="USD":
         if monto_nominal<50000:
             comision=0
         elif monto_nominal>=50000 and monto_nominal<80000:
@@ -31,26 +39,18 @@ def Calculo_impuesto(codigo_orden_pago,identificador_calculo_comision,monto_nomi
         elif monto_nominal>80000:
             comision=7.8*monto_nominal//100    
         monto_base=monto_nominal-comision
-    elif identificador_calculo_comision==3:
-        if "EUR" in codigo_orden_pago:
-            codigo_iso = "EUR"
-        elif "GBP" in codigo_orden_pago:
-            codigo_iso = "GBP"
+    elif identificador_calculo_comision==3 and (codigo_iso=="EUR" or codigo_iso=="GBP"):
         monto_fijo = 100
         if monto_nominal>25000:
             comision=6*monto_nominal//100
         monto_base=monto_nominal-(comision+monto_fijo)  
-    elif identificador_calculo_comision==4:
-        if "JPY" in codigo_orden_pago:
-            codigo_iso = "JPY"
+    elif identificador_calculo_comision==4 and codigo_iso=="JPY":
         if monto_nominal<=100000:
             comision=500
         elif monto_nominal>100000:
             comision=1000
         monto_base=monto_nominal-comision
-    elif identificador_calculo_comision==5:
-        if "ARS" in codigo_orden_pago:
-            codigo_iso = "ARS"
+    elif identificador_calculo_comision==5 and codigo_iso=="ARS":
         if monto_nominal<500000:
             comision=0
         elif monto_nominal>=500000:
@@ -58,15 +58,20 @@ def Calculo_impuesto(codigo_orden_pago,identificador_calculo_comision,monto_nomi
         if comision>50000:
             comision=50000
         monto_base=monto_nominal-comision
-    elif identificador_calculo_comision==8:
-        if "GBP" in codigo_orden_pago:
-            codigo_iso = "GBP"
+    elif identificador_calculo_comision==6:
+        codigo_iso = "GBP"
+        comision=0
+        monto_base=monto_nominal-comision
+    elif identificador_calculo_comision==7: 
+        comision=0
+        monto_base=monto_nominal-comision
+    elif identificador_calculo_comision==8 and codigo_iso=="GBP":
         bloques_miles = monto_nominal//1000
-        if monto_nominal%1000 < 0:
+        if monto_nominal%1000 > 0:
             bloques_miles +=1
-        comision = 20 + 3 * bloques_miles
+        comision = 20 + (3 * bloques_miles)
         monto_base = monto_nominal - comision
-    return monto_base,comision,codigo_iso
+    return monto_base,comision
 def moneda_invalida(cadena):
     mensaje_error="Moneda incorrecta"
     if not (("ARS" in cadena)or("USD" in cadena)or("EUR" in cadena)or("GBP" in cadena)or("JPY" in cadena) ):
@@ -140,7 +145,8 @@ def principal():
             r14+=1
 
         #calculo de comicion
-        monto_base,comision,codigo_iso=Calculo_impuesto(codigo_orden_pago,identificador_calculo_comision,monto_nominal)
+        codigo_iso=det_codigo_iso(codigo_orden_pago)
+        monto_base,comision=Calculo_impuesto(codigo_iso,identificador_calculo_comision,monto_nominal)
         
         #calculo de calculo imporsitivo
         if identificador_calculo_impositivo==1:
