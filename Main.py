@@ -14,18 +14,17 @@ def det_codigo_iso(codigo_orden_pago):
     if "ARS" in codigo_orden_pago:
             codigo_iso = "ARS"
     if "USD" in codigo_orden_pago:
-            codigo_iso = "ARS"
+            codigo_iso = "USD"
     if "EUR" in codigo_orden_pago:
-            codigo_iso = "ARS"
+            codigo_iso = "EUR"
     if "GBP" in codigo_orden_pago:
-            codigo_iso = "ARS"
+            codigo_iso = "GBP"
     if "JPY" in codigo_orden_pago:
-            codigo_iso = "ARS"
+            codigo_iso = "JPY"
     return codigo_iso
 def Calculo_impuesto(codigo_iso,identificador_calculo_comision,monto_nominal):
     monto_base=0
     comision=0
-    codigo_iso=""
     monto_fijo=0
     bloques_miles = 0
     if identificador_calculo_comision==1 and codigo_iso=="ARS":
@@ -199,11 +198,9 @@ def principal():
             r8+=1
         if codigo_iso=="JPY" and orden_invalida!="Moneda incorrecta":
             r9+=1
-    r15=(100*cant_invalidas//total_operaciones)
-    r16=total_op_validas_ars//cont_ars_val
-    print(nombre)
+    r15=(100*cant_invalidas//total_operaciones) if total_operaciones !=0 else 0
+    r16=total_op_validas_ars//cont_ars_val if cont_ars_val !=0 else 0
 
-    
     print(' (r1) - Cantidad de ordenes invalidas - moneda no autorizada:', r1) 
     print(' (r2) - Cantidad de ordenes invalidas - beneficiario mal identificado:', r2) 
     print(' (r3) - Cantidad de operaciones validas:', r3) 
@@ -220,5 +217,6 @@ def principal():
     print('(r14) - Cantidad de veces que apareció ese mismo nombre:', r14) 
     print('(r15) - Porcentaje de operaciones inválidas sobre el total:',r15 ) 
     print('(r16) - Monto final promedio de las ordenes validas en moneda ARS:', r16)
+
 if __name__ == "__main__":
     principal()
